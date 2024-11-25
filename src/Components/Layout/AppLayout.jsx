@@ -13,67 +13,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import productImage1 from "./../../Assets/product-img-1.jpg";
-import productImage2 from "./../../Assets/product-img-2.jpg";
-import productImage3 from "./../../Assets/product-img-3.jpg";
-import productImage4 from "./../../Assets/product-img-4.jpg";
-import productImage5 from "./../../Assets/product-img-5.jpg";
-import productImage6 from "./../../Assets/product-img-6.jpg";
-import { Card, Menu, MenuItem, Rating } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import {Menu, MenuItem} from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from "react-router-dom";
+import ProductsCard from "../products-card/ProductsCard";
 
-const productsData = [
-  {
-    id: 1,
-    image: productImage1,
-    Name: "Haldiram's Sev Bhujia",
-    Category: "Snack & Munchies",
-    Price: "18",
-    rating: "3",
-  },
-  {
-    id: 2,
-    image: productImage2,
-    Name: "NutriChoice Digestive",
-    Category: "Bakery & Biscuits",
-    Price: "24",
-    rating: "4",
-  },
-  {
-    id: 3,
-    image: productImage3,
-    Name: "Cadbury 5 Star Chocolate",
-    Category: "Bakery & Biscuits",
-    Price: "32",
-    rating: "4",
-  },
-  {
-    id: 4,
-    image: productImage4,
-    Name: "Onion Flavour Potato",
-    Category: "Snack & Munchies",
-    Price: "3",
-    rating: "5",
-  },
-  {
-    id: 5,
-    image: productImage5,
-    Name: "Salted Instant Popcorn",
-    Category: "Instant Food",
-    Price: "13",
-    rating: "5",
-  },
-  {
-    id: 6,
-    image: productImage6,
-    Name: "Blueberry Greek Yogurt",
-    Category: "Dairy, Bread & Eggs",
-    Price: "18",
-    rating: "5",
-  },
-];
+const productsData = [];
 
 const drawerWidth = 240;
 const navItems = ["Home", "About", "Contact"];
@@ -212,7 +157,7 @@ function AppLayout(props) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
@@ -227,33 +172,8 @@ function AppLayout(props) {
       </nav>
       <Box component="main" className="mt-3 px-3 w-100">
         <Toolbar />
-        <Box
-          className="d-flex flex-wrap justify-content-center gap-2"
-          sx={{ maxWidth: "100%", margin: "0 auto",}}
-        >
-          {productsData.map((product, index) => (
-            <Card
-              key={index}
-              className="p-3 card"
-              style={{ width: "250px", margin: "10px" }}
-            >
-              <img
-                className="card-image"
-                src={product.image}
-                alt="Product img"
-              />
-              <Typography variant="body2" className="mt-3">{product.Category}</Typography>
-              <Typography variant="body1">{product.Name}</Typography>
-              <Rating name="read-only" value={product.rating} readOnly />
-              <Box className="d-flex justify-content-between align-items-center">
-                <Typography>${product.Price}</Typography>
-                <Button size="small" variant="contained">
-                  <AddIcon /> ADD
-                </Button>
-              </Box>
-            </Card>
-          ))}
-        </Box>
+        {/* product cards */}
+        <ProductsCard productsData={productsData} />
       </Box>
     </Box>
   );
