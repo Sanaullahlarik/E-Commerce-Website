@@ -89,6 +89,7 @@ function AppLayout(props) {
     </Box>
   );
 
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -119,6 +120,7 @@ function AppLayout(props) {
                 {item}
               </Button>
             ))}
+
       <IconButton
         size="large"
         aria-label="account of current user"
@@ -151,6 +153,7 @@ function AppLayout(props) {
         </Toolbar>
       </AppBar>
       <nav>
+        
         <Drawer
           container={container}
           variant="temporary"

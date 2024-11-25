@@ -17,7 +17,6 @@ const ProductsCard = (props) => {
 
     console.log(productsData, `products`);
   }, []);
-  
   return (
     <Box
       className="d-flex flex-wrap justify-content-center gap-2"
