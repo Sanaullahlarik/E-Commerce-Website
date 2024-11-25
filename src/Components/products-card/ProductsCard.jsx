@@ -28,7 +28,11 @@ const ProductsCard = (props) => {
           className="p-3 card"
           style={{ width: "250px", margin: "10px" }}
         >
-          <img className="card-image" src={product?.images[0]} alt="Product img" />
+          <img
+            className="card-image"
+            src={product?.images[0]}
+            alt="Product img"
+          />
           <Typography variant="body2" className="mt-3">
             {product?.Category}
           </Typography>

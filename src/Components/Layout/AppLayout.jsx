@@ -172,7 +172,6 @@ function AppLayout(props) {
       </nav>
       <Box component="main" className="mt-3 px-3 w-100">
         <Toolbar />
-        {/* product cards */}
         <ProductsCard productsData={productsData} />
       </Box>
     </Box>
