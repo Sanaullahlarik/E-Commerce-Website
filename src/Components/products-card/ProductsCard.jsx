@@ -13,7 +13,24 @@ const ProductsCard = (props) => {
   useEffect(() => {
     const productsData = axios
       .get("https://api.escuelajs.co/api/v1/products")
-      .then((data) => setProducts(data.data));
+      .then((data) => {
+        const filterData = data?.data?.filter(
+          (products) =>
+            products?.title !== "New Product" &&
+            products.title !== "Giày" &&
+            products.title !== "Coat" &&
+            products.title !== "Itachi" &&
+            products.title !== "JOSE LUIS" &&
+            products.title !== "JOSE LUIS" &&
+            products.title !== "sdfsd" &&
+            products.title !== "New Product AIT" &&
+            products.title !== "Strapi External APIs Integration Plugin"
+        );
+
+        console.log(filterData, "filterData");
+
+        setProducts(filterData);
+      });
 
     console.log(productsData, `products`);
   }, []);
