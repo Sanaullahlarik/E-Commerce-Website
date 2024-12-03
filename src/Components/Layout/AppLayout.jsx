@@ -13,10 +13,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import {Menu, MenuItem} from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Badge, Menu, MenuItem } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import ProductsCard from "../products-card/ProductsCard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CartList from "../../Components/cart-list/CartList";
+import { useSelector } from "react-redux";
 
 const productsData = [];
 
@@ -31,6 +34,15 @@ function AppLayout(props) {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const [openCartList, setOpenCartList] = React.useState(false);
+  const toggleCartList = (newOpen) => () => {
+    setOpenCartList(newOpen);
+  };
+
+  const {count} = useSelector((state)=> state.counter)
+  console.log(count, "itemCounts");
+  
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -48,47 +60,49 @@ function AppLayout(props) {
       <Divider />
       <List>
         {navItems.map((item) => (
-
           <ListItem key={item} disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
         ))}
-      <IconButton
-        size="large"
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        onClick={handleMenu}
-        color="inherit"
-      >
-        <Button><AccountCircleIcon /></Button>
-      </IconButton>
-      <Menu
-        id="menu-appbar"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>
-        <Link className="text-decoration-none text-dark" to="/sign-up">My Account</Link>
-        </MenuItem>
-      </Menu>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          onClick={handleMenu}
+          color="inherit"
+        >
+          <Button>
+            <AccountCircleIcon />
+          </Button>
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link className="text-decoration-none text-dark" to="/sign-up">
+              My Account
+            </Link>
+          </MenuItem>
+        </Menu>
       </List>
     </Box>
   );
-
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -121,39 +135,48 @@ function AppLayout(props) {
               </Button>
             ))}
 
-      <IconButton
-        size="large"
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        onClick={handleMenu}
-        color="inherit"
-      >
-        <Button className="text-white"><AccountCircleIcon /></Button>
-      </IconButton>
-      <Menu
-        id="menu-appbar"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-      </Menu>
+            <Badge badgeContent={count} color="secondary">
+              <ShoppingCartIcon
+                sx={{ cursor: "pointer" }}
+                onClick={toggleCartList(true)}
+                className="text-white"
+              />
+            </Badge>
+
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <Button className="text-white">
+                <AccountCircleIcon />
+              </Button>
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
       <nav>
-        
         <Drawer
           container={container}
           variant="temporary"
@@ -177,6 +200,7 @@ function AppLayout(props) {
         <Toolbar />
         <ProductsCard productsData={productsData} />
       </Box>
+      <CartList openCartList={openCartList} toggleCartList={toggleCartList} />
     </Box>
   );
 }
