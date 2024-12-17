@@ -4,36 +4,41 @@ import {
   Button,
   Card,
   Grid,
-  Grid2,
   Rating,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import CircularProgress from "@mui/material/CircularProgress";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/slices/cart/cartSlice";
 
 const ProductsCard = (props) => {
-  const { productsData } = props;
+  // const { productsData } = props;
   const [updatedProductsArr, setUpdatedProductsArr] = useState([]);
   const [products, setProducts] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [categoryArr, setCategoryArr] = useState([]);
 
+  const dispatch = useDispatch();
+
+  console.log(updatedProductsArr, "updatedProductsArr");
+
   const filterProducts = (categoryProduct) => {
     const filterByCategory = products.filter(
-      (item) => item.category.name === categoryProduct.value
+      (item) => item.category === categoryProduct.value
     );
 
     setUpdatedProductsArr(filterByCategory);
@@ -41,27 +46,13 @@ const ProductsCard = (props) => {
   };
   useEffect(() => {
     const productsData = axios
-      .get("https://api.escuelajs.co/api/v1/products")
+      .get("https://fakestoreapi.com/products")
       .then((data) => {
-        const filterData = data?.data?.filter(
-          (products) =>
-            products?.title !== "New Product" &&
-            products.title !== "Giày" &&
-            products.title !== "Coat" &&
-            products.title !== "Itachi" &&
-            products.title !== "JOSE LUIS" &&
-            products.title !== "JOSE LUIS" &&
-            products.title !== "sdfsd" &&
-            products.title !== "New Product AIT" &&
-            products.title !== "Strapi External APIs Integration Plugin" &&
-            products.title !== "product" &&
-            products.title !== "Updated Product" &&
-            products.title !== "Miscellaneous"
-        );
-        const categoryArr = filterData.map((item) => {
+        console.log(data, "apiData");
+        const categoryArr = data?.data?.map((item) => {
           return {
-            label: item.category.name,
-            value: item.category.name,
+            label: item.category,
+            value: item.category,
           };
         });
 
@@ -70,11 +61,12 @@ const ProductsCard = (props) => {
             index === self.findIndex((t) => t.value === item.value)
         );
         setCategoryArr(uniqueData);
-        setProducts(filterData);
-        setUpdatedProductsArr(filterData);
+        setProducts(data?.data);
+        setUpdatedProductsArr(data?.data);
         setIsLoadingData(false);
       });
   }, []);
+
   return (
     <>
       <Autocomplete
@@ -93,21 +85,16 @@ const ProductsCard = (props) => {
           </Box>
         ) : (
           updatedProductsArr?.map((product, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Grid container item xs={12} sm={6} md={4} lg={3}>
               <Card
                 key={index}
-                className="p-3 rounded-3"
-                sx={{
-                  background: "#fff",
-                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "15px",
-                }}
+                className="p-3 rounded-3 w-100 mt-5 shadow p-3 mb-5 bg-body rounded text-center"
               >
                 <Swiper
                   spaceBetween={20}
                   centeredSlides={true}
                   autoplay={{
-                    delay: 3000,
+                    delay: 2000,
                     disableOnInteraction: false,
                   }}
                   pagination={{
@@ -117,61 +104,97 @@ const ProductsCard = (props) => {
                   modules={[Autoplay, Pagination, Navigation]}
                   className="mySwiper"
                 >
-                  {product?.images?.map((img, imgIndex) => (
-                    <SwiperSlide key={imgIndex}>
-                      <img
-                        className="card-image img-fluid"
-                        src={img}
-                        alt="Product img"
-                        style={{
-                          borderRadius: "10px",
-                          objectFit: "cover",
-                          width: "100%",
-                          height: "300px",
-                        }}
-                      />
-                    </SwiperSlide>
-                  ))}
+                  <SwiperSlide>
+                    <img
+                      className="card-image img-fluid"
+                      src={product?.image}
+                      alt="Product img"
+                      style={{
+                        maxHeight: "210px",
+                        minHeight: "210px",
+                        marginTop: "20px",
+                      }}
+                    />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <img
+                      className="card-image img-fluid"
+                      src={product?.image}
+                      alt="Product img"
+                      style={{
+                        maxHeight: "210px",
+                        minHeight: "210px",
+                        marginTop: "20px",
+                      }}
+                    />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <img
+                      className="card-image img-fluid"
+                      src={product?.image}
+                      alt="Product img"
+                      style={{
+                        maxHeight: "210px",
+                        minHeight: "210px",
+                        marginTop: "20px",
+                      }}
+                    />
+                  </SwiperSlide>
                 </Swiper>
                 <Box className="mt-3" sx={{ textAlign: "center" }}>
                   <Typography
-                  className="text-primary"
-                    variant="body2"
+                    className="text-primary"
                     sx={{
                       textTransform: "uppercase",
                       fontWeight: 600,
                     }}
                   >
-                    {product?.category.name}
+                    {product?.category}
                   </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: "bold",
-                      color: "#333",
-                    }}
-                  >
-                    {product.title}
-                  </Typography>
+                  <Tooltip title={product?.title} placement="top">
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#333",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {product?.title?.length >= 30
+                        ? `${product?.title.slice(0, 30)}...`
+                        : product?.title}
+                    </Typography>
+                  </Tooltip>
+                  <Rating
+                    name="read-only"
+                    value={Math.round(product?.rating?.rate)}
+                    readOnly
+                  />
                 </Box>
-                <Box
-                  className="mt-3"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold"}}
-                  >
+                <Box className="mt-2 d-flex justify-content-between align-items-center">
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                     ${product?.price}
                   </Typography>
-                  <Button size="small" variant="contained">
-                    <AddIcon /> ADD
-                  </Button>
+                  <Box className="d-flex">
+                    <Box>
+                      <Tooltip title="View Product" placement="top">
+                        <Link to={`/product-details/${product?.id}`}>
+                          <Button size="small">
+                            <VisibilityIcon />
+                          </Button>
+                        </Link>
+                      </Tooltip>
+                    </Box>
+                    <Box>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => dispatch(addToCart(product))}
+                      >
+                        <AddIcon /> ADD
+                      </Button>
+                    </Box>
+                  </Box>
                 </Box>
               </Card>
             </Grid>

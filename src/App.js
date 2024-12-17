@@ -7,22 +7,29 @@ import PageNotFound from "./Components/page-not-found/pageNotFound";
 import ProductDetails from "./Components/product-details/ProductDetails";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+import ProductsCard from "./Components/products-card/ProductsCard";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <AppLayout />,
-      errorElement: <PageNotFound />
+      children: [
+        {
+          path: "",
+          element: <ProductsCard />,
+        },
+        { path: "/product-details/:product_id", element: <ProductDetails /> },
+      ],
+      errorElement: <PageNotFound />,
     },
-    {path:"/product-details/:product-id", element: <ProductDetails />},
     { path: "/sign-up", element: <SignUp /> },
     { path: "/sign-in", element: <SignIn /> },
   ]);
   return (
     <div className="App">
       <Provider store={store}>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </Provider>
     </div>
   );

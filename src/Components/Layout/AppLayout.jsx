@@ -13,10 +13,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Badge, Menu, MenuItem } from "@mui/material";
+import { Badge, Menu, MenuItem, Tooltip } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link } from "react-router-dom";
-import ProductsCard from "../products-card/ProductsCard";
+import { Link, Outlet } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartList from "../../Components/cart-list/CartList";
 import { useSelector } from "react-redux";
@@ -29,7 +28,6 @@ const navItems = ["Home", "About", "Contact"];
 function AppLayout(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,9 +38,7 @@ function AppLayout(props) {
     setOpenCartList(newOpen);
   };
 
-  const {count} = useSelector((state)=> state.counter)
-  console.log(count, "itemCounts");
-  
+  const { cartItems } = useSelector((state) => state.cart);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -55,7 +51,7 @@ function AppLayout(props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        E-store
+        E-commerce
       </Typography>
       <Divider />
       <List>
@@ -74,6 +70,15 @@ function AppLayout(props) {
           onClick={handleMenu}
           color="inherit"
         >
+          <Tooltip title="Add to Cart">
+            <Badge badgeContent={cartItems?.length} color="secondary">
+              <ShoppingCartIcon
+                sx={{ cursor: "pointer"}}
+                onClick={toggleCartList(true)}
+                className="text-primary"
+              />
+            </Badge>
+          </Tooltip>
           <Button>
             <AccountCircleIcon />
           </Button>
@@ -126,7 +131,7 @@ function AppLayout(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            E-store
+            E-commerce
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
@@ -135,13 +140,15 @@ function AppLayout(props) {
               </Button>
             ))}
 
-            <Badge badgeContent={count} color="secondary">
-              <ShoppingCartIcon
-                sx={{ cursor: "pointer" }}
-                onClick={toggleCartList(true)}
-                className="text-white"
-              />
-            </Badge>
+            <Tooltip title="Add to Cart">
+              <Badge badgeContent={cartItems?.length} color="secondary">
+                <ShoppingCartIcon
+                  sx={{ cursor: "pointer" }}
+                  onClick={toggleCartList(true)}
+                  className="text-white"
+                />
+              </Badge>
+            </Tooltip>
 
             <IconButton
               size="large"
@@ -198,7 +205,7 @@ function AppLayout(props) {
       </nav>
       <Box component="main" className="mt-3 px-3 w-100">
         <Toolbar />
-        <ProductsCard productsData={productsData} />
+        <Outlet />
       </Box>
       <CartList openCartList={openCartList} toggleCartList={toggleCartList} />
     </Box>
