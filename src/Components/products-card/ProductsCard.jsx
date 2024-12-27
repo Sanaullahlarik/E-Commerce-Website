@@ -26,7 +26,6 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/slices/cart/cartSlice";
 
 const ProductsCard = (props) => {
-  // const { productsData } = props;
   const [updatedProductsArr, setUpdatedProductsArr] = useState([]);
   const [products, setProducts] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -44,27 +43,33 @@ const ProductsCard = (props) => {
     setUpdatedProductsArr(filterByCategory);
     console.log(filterByCategory, "filterByCategory");
   };
+
+  const resetCategoryFilter = () => {
+    setUpdatedProductsArr(products);
+  };
+
   useEffect(() => {
-    const productsData = axios
-      .get("https://fakestoreapi.com/products")
-      .then((data) => {
-        console.log(data, "apiData");
-        const categoryArr = data?.data?.map((item) => {
-          return {
-            label: item.category,
-            value: item.category,
-          };
-        });
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axios.get("https://fakestoreapi.com/products");
+        const categoryArr = data.map((item) => ({
+          label: item.category,
+          value: item.category,
+        }));
 
         const uniqueData = categoryArr.filter(
           (item, index, self) =>
             index === self.findIndex((t) => t.value === item.value)
         );
         setCategoryArr(uniqueData);
-        setProducts(data?.data);
-        setUpdatedProductsArr(data?.data);
+        setProducts(data);
+        setUpdatedProductsArr(data);
         setIsLoadingData(false);
-      });
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
   }, []);
 
   return (
@@ -74,7 +79,11 @@ const ProductsCard = (props) => {
         options={categoryArr}
         sx={{ width: 300 }}
         onChange={(e, newValue) => {
-          filterProducts(newValue);
+          if (newValue) {
+            filterProducts(newValue);
+          } else {
+            resetCategoryFilter();
+          }
         }}
         renderInput={(params) => <TextField {...params} label="Category" />}
       />
@@ -85,9 +94,8 @@ const ProductsCard = (props) => {
           </Box>
         ) : (
           updatedProductsArr?.map((product, index) => (
-            <Grid container item xs={12} sm={6} md={4} lg={3}>
+            <Grid container item xs={12} sm={6} md={4} lg={3} key={index}>
               <Card
-                key={index}
                 className="p-3 rounded-3 w-100 mt-5 shadow p-3 mb-5 bg-body rounded text-center"
               >
                 <Swiper
@@ -104,30 +112,6 @@ const ProductsCard = (props) => {
                   modules={[Autoplay, Pagination, Navigation]}
                   className="mySwiper"
                 >
-                  <SwiperSlide>
-                    <img
-                      className="card-image img-fluid"
-                      src={product?.image}
-                      alt="Product img"
-                      style={{
-                        maxHeight: "210px",
-                        minHeight: "210px",
-                        marginTop: "20px",
-                      }}
-                    />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <img
-                      className="card-image img-fluid"
-                      src={product?.image}
-                      alt="Product img"
-                      style={{
-                        maxHeight: "210px",
-                        minHeight: "210px",
-                        marginTop: "20px",
-                      }}
-                    />
-                  </SwiperSlide>
                   <SwiperSlide>
                     <img
                       className="card-image img-fluid"
@@ -204,4 +188,5 @@ const ProductsCard = (props) => {
     </>
   );
 };
+
 export default ProductsCard;

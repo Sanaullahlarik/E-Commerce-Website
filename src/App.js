@@ -8,18 +8,26 @@ import ProductDetails from "./Components/product-details/ProductDetails";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import ProductsCard from "./Components/products-card/ProductsCard";
+import ProtectRoute from "./Components/protect-route/ProtectRoute";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <AppLayout />,
+      element: (
+        <ProtectRoute>
+          <AppLayout />
+        </ProtectRoute>
+      ),
       children: [
         {
           path: "",
           element: <ProductsCard />,
         },
-        { path: "/product-details/:product_id", element: <ProductDetails /> },
+        {
+          path: "/product-details/:product_id",
+          element: <ProductDetails />,
+        },
       ],
       errorElement: <PageNotFound />,
     },

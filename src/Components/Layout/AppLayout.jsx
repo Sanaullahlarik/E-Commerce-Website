@@ -15,15 +15,18 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Badge, Menu, MenuItem, Tooltip } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartList from "../../Components/cart-list/CartList";
 import { useSelector } from "react-redux";
-
 const productsData = [];
 
 const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact"];
+const navItems = [ 
+  { id: 1, navItem: "Home", navLink: "/" },
+  { id: 2, navItem: "About", navLink: "/about" },
+  { id: 3, navItem: "Contact", navLink: "/contact" },
+];
 
 function AppLayout(props) {
   const { window } = props;
@@ -51,16 +54,18 @@ function AppLayout(props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        E-commerce
+        E-Store
       </Typography>
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+          <Link key={item?.id} to={item?.navLink}>
+          <ListItem disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
+              <ListItemText primary={item?.navItem} />
             </ListItemButton>
           </ListItem>
+          </Link>
         ))}
         <IconButton
           size="large"
@@ -73,7 +78,7 @@ function AppLayout(props) {
           <Tooltip title="Add to Cart">
             <Badge badgeContent={cartItems?.length} color="secondary">
               <ShoppingCartIcon
-                sx={{ cursor: "pointer"}}
+                sx={{ cursor: "pointer" }}
                 onClick={toggleCartList(true)}
                 className="text-primary"
               />
@@ -131,13 +136,15 @@ function AppLayout(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            E-commerce
+            E-Store
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
+              <Link key={item?.id} to={item?.navLink}>
+              <Button sx={{ color: "#fff" }}>
+                {item?.navItem}
               </Button>
+              </Link>
             ))}
 
             <Tooltip title="Add to Cart">
