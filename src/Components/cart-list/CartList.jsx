@@ -7,10 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import {decreaseQuantity, deleteProduct, increaseQuantity } from "../../store/slices/cart/cartSlice";
+import {
+  decreaseQuantity,
+  deleteProduct,
+  increaseQuantity,
+} from "../../store/slices/cart/cartSlice";
 import { useDispatch } from "react-redux";
-import DeleteIcon from '@mui/icons-material/Delete';
-import PlusOneIcon from '@mui/icons-material/PlusOne';
+import DeleteIcon from "@mui/icons-material/Delete";
+import PlusOneIcon from "@mui/icons-material/PlusOne";
 
 const CartList = (props) => {
   const { openCartList, toggleCartList } = props;
@@ -21,10 +25,22 @@ const CartList = (props) => {
 
   console.log(cartItems, "cartItems");
 
+  const totalPrice = cartItems.reduce(
+    (acc, sum) => sum.price * sum.quantity + acc,
+    0
+  );
+  
   return (
     <>
-      <Drawer anchor="right" open={openCartList} onClose={toggleCartList(false)}>
-        <Box sx={{ width: "500px" }}>
+      <Drawer
+        anchor="right"
+        open={openCartList}
+        onClose={toggleCartList(false)}
+      >
+        <Box
+          className="position-relative"
+          sx={{ width: "500px", height: "99vh" }}
+        >
           <Typography className="m-2">Cart Items</Typography>
           {cartItems?.map((item) => {
             return (
@@ -76,11 +92,22 @@ const CartList = (props) => {
                           : item?.title}
                       </Typography>
                     </Tooltip>
-                    <Box sx={{ display: "flex", gap: 1}}>
-                      <Button onClick={()=>dispatch(increaseQuantity(item))} size="small" variant="outlined" color="primary">
-                      <PlusOneIcon/>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <Button
+                        onClick={() => dispatch(increaseQuantity(item))}
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                      >
+                        <PlusOneIcon />
                       </Button>
-                      <Button className="fw-bold" onClick={()=>dispatch(decreaseQuantity(item))} size="small" variant="outlined" color="error">
+                      <Button
+                        className="fw-bold"
+                        onClick={() => dispatch(decreaseQuantity(item))}
+                        size="small"
+                        variant="outlined"
+                        color="error"
+                      >
                         -1
                       </Button>
                     </Box>
@@ -97,19 +124,32 @@ const CartList = (props) => {
                     }}
                   >
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      ${item?.price}{" "}
+                      Price: ${item?.price}{" "}
                       <span style={{ fontSize: "16px" }}>
                         Qty: {item.quantity}
                       </span>
                     </Typography>
-                      <Button onClick={()=>dispatch(deleteProduct(item))} size="small" variant="text" color="error">
-                      <DeleteIcon/>
-                      </Button>
+                    <Button
+                      onClick={() => dispatch(deleteProduct(item))}
+                      size="small"
+                      variant="text"
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </Button>
                   </Box>
                 </Box>
               </Box>
             );
           })}
+          <Button
+            type="submit"
+            fullWidth
+            className="mt-3 position-absolute bottom-0"
+            variant="contained"
+          >
+            Total Price : ${totalPrice}
+          </Button>
         </Box>
       </Drawer>
     </>
