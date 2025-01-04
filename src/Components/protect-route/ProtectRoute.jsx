@@ -13,8 +13,8 @@ const ProtectRoute = ({ children }) => {
 
   if (token) {
     return <> {children}</>;
-  }else{
-   navigate("/sign-in")
+  } else {
+    navigate("/sign-in");
   }
 };
 

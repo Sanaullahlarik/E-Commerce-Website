@@ -41,7 +41,6 @@ const ProductsCard = (props) => {
 
   const dispatch = useDispatch();
 
-  console.log(updatedProductsArr, "updatedProductsArr");
 
   const filterProducts = (categoryProduct) => {
     const filterByCategory = products.filter(
@@ -94,7 +93,7 @@ const ProductsCard = (props) => {
         }}
         renderInput={(params) => <TextField {...params} label="Category" />}
       />
-      <Grid container spacing={3}>
+      <Grid container spacing={3} justifyContent="center">
         {isLoadingData ? (
           <Box className="text-center w-100 mt-4">
             <CircularProgress size={40} />

@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Badge, Menu, MenuItem, Tooltip } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartList from "../../Components/cart-list/CartList";
 import { useSelector } from "react-redux";
@@ -118,7 +118,7 @@ function AppLayout(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>
@@ -134,11 +134,11 @@ function AppLayout(props) {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" } }}
           >
             E-Store
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
             {navItems.map((item) => (
               <Link key={item?.id} to={item?.navLink}>
               <Button sx={{ color: "#fff" }}>
@@ -146,7 +146,7 @@ function AppLayout(props) {
               </Button>
               </Link>
             ))}
-
+            </Box>
             <Tooltip title="Add to Cart">
               <Badge badgeContent={cartItems?.length} color="secondary">
                 <ShoppingCartIcon
@@ -187,7 +187,7 @@ function AppLayout(props) {
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
             </Menu>
-          </Box>
+          
         </Toolbar>
       </AppBar>
       <nav>
